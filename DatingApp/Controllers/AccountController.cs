@@ -36,7 +36,7 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         };
     }
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDTO loginDTO)
     {
         var user = await dataContext.Users!.FirstOrDefaultAsync(x => x.UserName.ToLower() == loginDTO.Username.ToLower());
