@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DatingApp.Data.Migrations
+namespace DatingApp.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -16,7 +16,10 @@ namespace DatingApp.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserName = table.Column<string>(type: "TEXT", nullable: false)
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: false)
                 },
                 constraints: table =>
                 {

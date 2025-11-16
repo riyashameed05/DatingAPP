@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DatingApp.Data.Migrations
+namespace DatingApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241124133103_UserEntitypdated")]
-    partial class UserEntitypdated
+    [Migration("20251111193855_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,10 @@ namespace DatingApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()

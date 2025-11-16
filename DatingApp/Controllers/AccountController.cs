@@ -20,17 +20,26 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         {
             return BadRequest("User Already Registered");
         }
+
+        if (await this.EmailExists(registerDTO.Email))
+        {
+            return BadRequest("Email Already Registered");
+        }
+
         using var hmac = new HMACSHA512();
         var user = new AppUser
         {
             UserName = registerDTO.Username,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key,
+            Email = registerDTO.Email,
         };
         dataContext.Users!.Add(user);
         await dataContext.SaveChangesAsync();
         return new UserDto
         {
+            Id = user.Id,
+            Email = user.Email,
             Username = user.UserName,
             Token = tokenService.Createtoken(user),
         };
@@ -39,10 +48,10 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDTO loginDTO)
     {
-        var user = await dataContext.Users!.FirstOrDefaultAsync(x => x.UserName.ToLower() == loginDTO.Username.ToLower());
+        var user = await dataContext.Users!.SingleOrDefaultAsync(x => x.Email.ToLower() == loginDTO.Email.ToLower());
         if (user == null)
         {
-            return Unauthorized("Invalid Username");
+            return Unauthorized("Invalid Email Address");
         }
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
@@ -54,7 +63,9 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
             }
         }
         return new UserDto
-        {
+        {   
+            Id = user.Id,
+            Email = user.Email,
             Username = user.UserName,
             Token = tokenService.Createtoken(user),
         };
@@ -63,6 +74,11 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
     public async Task<bool> UserExists(string username)
     {
         return await dataContext.Users!.AnyAsync(x => x.UserName.ToLower() == username.ToLower());
+    }
+
+    public async Task<bool> EmailExists(string email)
+    {
+        return await dataContext.Users!.AnyAsync(x => x.Email.ToLower() == email.ToLower());
     }
 
 }

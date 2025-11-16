@@ -16,6 +16,7 @@ public class TokenService(IConfiguration config) : ITokenService
         if (tokenkey.Length < 64) throw new Exception("your token key must be at least 64 characters");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenkey));
         var claims = new List<Claim>(){
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.NameIdentifier, user.UserName)
         };
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
