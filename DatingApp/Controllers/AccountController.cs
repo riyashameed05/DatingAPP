@@ -16,7 +16,7 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDTO registerDTO)
     {
-        if (await this.UserExists(registerDTO.Username))
+        if (await this.UserExists(registerDTO.DisplayName))
         {
             return BadRequest("User Already Registered");
         }
@@ -29,7 +29,7 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         using var hmac = new HMACSHA512();
         var user = new AppUser
         {
-            UserName = registerDTO.Username,
+            UserName = registerDTO.DisplayName,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password)),
             PasswordSalt = hmac.Key,
             Email = registerDTO.Email,
@@ -40,7 +40,7 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         {
             Id = user.Id,
             Email = user.Email,
-            Username = user.UserName,
+            DisplayName = user.UserName,
             Token = tokenService.Createtoken(user),
         };
     }
@@ -59,14 +59,14 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         {
             if (computedHash[i] != user.PasswordHash[i])
             {
-                return Unauthorized("Invalid Username");
+                return Unauthorized("Invalid Passwor");
             }
         }
         return new UserDto
         {   
             Id = user.Id,
             Email = user.Email,
-            Username = user.UserName,
+            DisplayName = user.UserName,
             Token = tokenService.Createtoken(user),
         };
     }

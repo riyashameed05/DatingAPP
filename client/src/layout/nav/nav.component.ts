@@ -1,37 +1,36 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
- import { AccountService } from '../../core/account.service';
+ import { AccountService } from '../../core/services/account.service';
 import { NgIf } from '@angular/common';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../core/services/toast-service';
 
 @Component({
-  selector: 'app-nav',
-  standalone: true,
-  imports: [FormsModule, BsDropdownModule,RouterLink,RouterLinkActive],
-  templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css'
+    selector: 'app-nav',
+    standalone: true,
+    imports: [FormsModule,RouterLink,RouterLinkActive],
+    templateUrl: './nav.component.html',
+    styleUrl: './nav.component.css'
 })
 export class NavComponent {
   protected creds : any = {};
-  private accountService = inject(AccountService);
-  // toastr = inject(ToastrService);
-  // router = inject(Router);
-  protected loggedin = signal(false);
+  protected accountService = inject(AccountService);
+  protected router = inject(Router);
+  protected toast = inject(ToastService);
 
   login() {
     this.accountService.login(this.creds).subscribe({
-      next : result => {console.log(result);
-      this.loggedin.set(true);
+      next : result => {
+        this.router.navigateByUrl('/members');
+        this.toast.success('Logged in successfully');
+        this.creds = {};
       },
-      error : error => console.log(error)
+      error : error => this.toast.error(error.error)
     });
   }
 
   logout() {
-    this.loggedin.set(false);
-    //this.accountService.logout();
-    //this.router.navigateByUrl('/');
+    this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 }
