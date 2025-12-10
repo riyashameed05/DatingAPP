@@ -23,8 +23,9 @@ public class Seed
             var user = new AppUser()
             {
                 Id = member.Id,
-                UserName = member.Email,
+                UserName = member.DisplayName,
                 Email = member.Email,
+                ImageUrl = member.ImageUrl,
                 PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Pa$$w0rd")),
                 PasswordSalt = hmac.Key,
                 Member = new Member()
@@ -38,7 +39,7 @@ public class Seed
                     DateOfBirth = member.DateOfBirth,
                     Created = member.Created,
                     LastActive = member.LastActive,
-
+                    DisplayName = member.DisplayName,
                 }
             };
 

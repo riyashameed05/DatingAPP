@@ -7,6 +7,7 @@ namespace DatingApp.Entities;
 
 public class Member
 {
+    public required string DisplayName { get; set; }
     public string Id { get; set; } = null!;
 
     public DateOnly DateOfBirth { get; set; }

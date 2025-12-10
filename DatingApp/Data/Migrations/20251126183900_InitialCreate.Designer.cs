@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251124190416_MembersEntityUpdated")]
-    partial class MembersEntityUpdated
+    [Migration("20251126183900_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,10 @@ namespace DatingApp.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")
@@ -124,12 +128,17 @@ namespace DatingApp.Data.Migrations
             modelBuilder.Entity("DatingApp.Entities.Photo", b =>
                 {
                     b.HasOne("DatingApp.Entities.Member", "Member")
-                        .WithMany()
+                        .WithMany("Photos")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("DatingApp.Entities.Member", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("DatingApp.Model.AppUser", b =>

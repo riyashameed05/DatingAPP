@@ -20,6 +20,7 @@ public static class IdentityServiceExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenkey)),
             };
         });
+
         return services;
     }
 }

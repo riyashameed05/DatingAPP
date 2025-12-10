@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatingApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251124190224_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251126184443_UpdateUser")]
+    partial class UpdateUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,10 @@ namespace DatingApp.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -54,7 +58,31 @@ namespace DatingApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Member");
+                    b.ToTable("Members");
+                });
+
+            modelBuilder.Entity("DatingApp.Entities.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MemberId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("DatingApp.Model.AppUser", b =>
@@ -95,6 +123,22 @@ namespace DatingApp.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DatingApp.Entities.Photo", b =>
+                {
+                    b.HasOne("DatingApp.Entities.Member", "Member")
+                        .WithMany("Photos")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("DatingApp.Entities.Member", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("DatingApp.Model.AppUser", b =>

@@ -1,5 +1,3 @@
-using System;
-using DatingApp.Data.Migrations;
 using DatingApp.Entities;
 
 namespace DatingApp.Interface;

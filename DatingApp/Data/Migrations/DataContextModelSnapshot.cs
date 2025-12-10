@@ -39,6 +39,10 @@ namespace DatingApp.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -51,7 +55,7 @@ namespace DatingApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("DatingApp.Entities.Photo", b =>
@@ -75,7 +79,7 @@ namespace DatingApp.Data.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Photos", (string)null);
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("DatingApp.Model.AppUser", b =>
@@ -104,7 +108,7 @@ namespace DatingApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DatingApp.Entities.Member", b =>
@@ -121,12 +125,17 @@ namespace DatingApp.Data.Migrations
             modelBuilder.Entity("DatingApp.Entities.Photo", b =>
                 {
                     b.HasOne("DatingApp.Entities.Member", "Member")
-                        .WithMany()
+                        .WithMany("Photos")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("DatingApp.Entities.Member", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("DatingApp.Model.AppUser", b =>

@@ -65,6 +65,7 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
         return new UserDto
         {   
             Id = user.Id,
+            ImageUrl = user.ImageUrl,
             Email = user.Email,
             DisplayName = user.UserName,
             Token = tokenService.Createtoken(user),

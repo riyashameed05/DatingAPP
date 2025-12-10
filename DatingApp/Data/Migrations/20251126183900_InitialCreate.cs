@@ -28,10 +28,11 @@ namespace DatingApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Member",
+                name: "Members",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    DisplayName = table.Column<string>(type: "TEXT", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -43,21 +44,50 @@ namespace DatingApp.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Member", x => x.Id);
+                    table.PrimaryKey("PK_Members", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Member_Users_Id",
+                        name: "FK_Members_Users_Id",
                         column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Url = table.Column<string>(type: "TEXT", nullable: false),
+                    PublicId = table.Column<string>(type: "TEXT", nullable: true),
+                    MemberId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_Members_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "Members",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_MemberId",
+                table: "Photos",
+                column: "MemberId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Member");
+                name: "Photos");
+
+            migrationBuilder.DropTable(
+                name: "Members");
 
             migrationBuilder.DropTable(
                 name: "Users");

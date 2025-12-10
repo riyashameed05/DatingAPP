@@ -4,6 +4,7 @@ namespace DatingApp.DTOs;
 
 public class SeedUserDto
 {
+    public required string DisplayName { get; set; }
     public required string Id { get; set; }
 
     public required string Email { get; set; }
